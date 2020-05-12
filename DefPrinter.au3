@@ -1,6 +1,21 @@
 #include <GUIConstantsEx.au3>
 #include <ComboConstants.au3>
 $PrnTXT = @AppDataDir & '\DefPrinter.txt'
+$LNG = "en"
+Switch StringLower($LNG)
+   Case "ua"
+	  $guiTitle = "Вибір принтера"
+	  $guiLabelText = "Виберіть, будь-ласка, принтер за замовчуванням:"
+	  $guiBtnText = "Зберегти"
+   Case "ru"
+	  $guiTitle = "Выберите принтер"
+	  $guiLabelText = "Выберите, пожалуйста, принтер по умолчанию:"
+	  $guiBtnText = "Сохранить"
+   Case "en"
+	  $guiTitle = "Printer selection"
+	  $guiLabelText = "Please, select default printer:"
+	  $guiBtnText = "Save"
+EndSwitch
 
 if $CmdLine[0]>=1 Then
    if StringLower($CmdLine[1])='/config' Then
@@ -27,11 +42,11 @@ EndIf
 
 Func ShowWin()
    Local $msg
-   GUICreate("Вибір принтера",370,80)
-   GUICtrlCreateLabel("Виберіть, будь-ласка, принтер за замовчуванням:",10,5)
+   GUICreate($guiTitle,370,80)
+   GUICtrlCreateLabel($guiLabelText,10,5)
    $lst = GUICtrlCreateCombo("", 10, 22,350,15,$CBS_DROPDOWNLIST)
    GUICtrlSetData($lst,$PrnList,$strDefaultPrinter)
-   $btnSave = GUICtrlCreateButton("Зберегти",135,50,100,25)
+   $btnSave = GUICtrlCreateButton($guiBtnText,135,50,100,25)
    GUISetState()
    While 1
 	  $msg = GUIGetMsg()
