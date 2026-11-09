@@ -4,13 +4,9 @@ $PrnTXT = @AppDataDir & '\DefPrinter.txt'
 $LNG = "en"
 Switch StringLower($LNG)
    Case "ua"
-	  $guiTitle = "Âèá³ð ïðèíòåðà"
-	  $guiLabelText = "Âèáåð³òü, áóäü-ëàñêà, ïðèíòåð çà çàìîâ÷óâàííÿì:"
-	  $guiBtnText = "Çáåðåãòè"
-   Case "ru"
-	  $guiTitle = "Âûáåðèòå ïðèíòåð"
-	  $guiLabelText = "Âûáåðèòå, ïîæàëóéñòà, ïðèíòåð ïî óìîë÷àíèþ:"
-	  $guiBtnText = "Ñîõðàíèòü"
+	  $guiTitle = "Ã‚Ã¨Ã¡Â³Ã° Ã¯Ã°Ã¨Ã­Ã²Ã¥Ã°Ã "
+	  $guiLabelText = "Ã‚Ã¨Ã¡Ã¥Ã°Â³Ã²Ã¼, Ã¡Ã³Ã¤Ã¼-Ã«Ã Ã±ÃªÃ , Ã¯Ã°Ã¨Ã­Ã²Ã¥Ã° Ã§Ã  Ã§Ã Ã¬Ã®Ã¢Ã·Ã³Ã¢Ã Ã­Ã­Ã¿Ã¬:"
+	  $guiBtnText = "Ã‡Ã¡Ã¥Ã°Ã¥Ã£Ã²Ã¨"
    Case "en"
 	  $guiTitle = "Printer selection"
 	  $guiLabelText = "Please, select default printer:"
@@ -32,6 +28,20 @@ if $CmdLine[0]>=1 Then
 		 Next
 	  Endif
 	  ShowWin()
+   EndIf
+   if StringLower($CmdLine[1])='/get' Then
+	  $wbemFlagReturnImmediately = 0x10
+	  $wbemFlagForwardOnly = 0x20
+	  $objWMIService = ObjGet("winmgmts:\\.\root\CIMV2")
+	  $colItems = $objWMIService.ExecQuery("SELECT * FROM Win32_Printer", "WQL", $wbemFlagReturnImmediately + $wbemFlagForwardOnly)
+	  If IsObj($colItems) then
+		 For $objItem In $colItems
+			if $objItem.Default Then
+			  $Fl = FileOpen($PrnTXT,2)
+			  FileWriteLine($Fl,$objItem.DeviceID)
+			Endif
+		 Next
+	  Endif
    EndIf
 Else
    If FileExists($PrnTXT) Then
